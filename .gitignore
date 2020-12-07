@@ -1,0 +1,16 @@
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Bb]uild/
+!Source/Osdr.Mvc/OsdrWeb/Widgets/3rd/pdfjs/build
+!Source/Osdr.Ng2/src/client/assets/3rd/pdf-js/build
+!Source/Osdr.Mvc/3rd/
+[Bb]in/
+[Oo]bj/
+[Dd]ist/
+[Xx]unit/
+[Xx]unit-results.xml
+
+/target/

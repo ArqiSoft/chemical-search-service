@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+    chemical-search-service:
+        container_name: chemical-search-service
+        image: leanda/chemical-search:latest
+        environment:
+        - TZ=EST
+        - OSDR_LOG_FOLDER=/logs
+        - OSDR_TEMP_FILES_FOLDER=/temp
+        - OSDR_RABBIT_MQ=rabbitmq://guest:guest@rabbitmq:5672/osdr_dev
+        - OSDR_MONGO_DB=mongodb://mongo:27017/osdr_dev
+        volumes:
+        - ${OSDR_TEMP_FILES_FOLDER}:/temps/
+        - ${OSDR_LOG_FOLDER}:/logs/
+        build:
+            context: .
+        ports:
+        - 8982:8081
+        networks:
+        - osdr-net-ext
+            
+networks:
+    osdr-net-ext:
+        external:
+            name: osdr-sys-net
