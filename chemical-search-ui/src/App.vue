@@ -1,5 +1,7 @@
 <template>
-  <img alt="ArqiSoft logo" src="./assets/logo.png" class="logo">
+  <a href="http://www.arqisoft.com/" alt="ArqiSoft, LLC" target="_blank" rel="noopener noreferrer">
+    <img alt="ArqiSoft logo" src="./assets/logo.png" class="logo">
+  </a>
   <Home msg="Checmical Search"/>
 </template>
 

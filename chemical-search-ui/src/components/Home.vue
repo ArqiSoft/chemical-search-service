@@ -1,34 +1,66 @@
 <template>
-    <h1>{{ msg }}</h1>
+    <h1>Chemical Search</h1>
     
     <section>
-      <h3>Search</h3>
       <input
         class="search-box"
         placeholder="Enter SMILES"
         autofocus
         v-model="todoText"
         @keyup.enter="search"
-      />        
+      />
+      <button @click="search">Search</button>
     </section>
 
     <section>
       <h3>Results</h3>
+       <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in items" :key="item.id">
+                    <td>{{item.name}}</td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 
 </template>
 
 <script lang="ts">
 import { Options, setup, Vue } from 'vue-class-component';
+import axios from "axios";
+
+const getData = () => [{name:"John"},{name:"Jane"}];
 
 @Options({
 })
-export default class HelloWorld extends Vue {
- 
+export default class Home extends Vue {
+  keyword?: string;
+
+  items = setup(() => getData())
+
   search() {
     console.log('search');
+    axios
+        .get("https://swapi.dev/api/people/", {
+          params: {
+            search: this.keyword
+          }
+        })
+        .then(res => {
+          // eslint-disable-next-line no-console
+          console.log(res.data.results);
+          this.items = res.data.results;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
   }
-
 }
 </script>
 
