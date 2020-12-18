@@ -1,5 +1,5 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
+  <img alt="ArqiSoft logo" src="./assets/logo.png" class="logo">
   <Home msg="Checmical Search"/>
 </template>
 
@@ -23,5 +23,9 @@ export default class App extends Vue {}
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.logo {
+  width: 10rem;
 }
 </style>
