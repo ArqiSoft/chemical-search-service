@@ -3,9 +3,13 @@
     
     <section>
       <h3>Search</h3>
-      <p>
-        Enter a search criteria in SMILES format
-      </p>
+      <input
+        class="search-box"
+        placeholder="Enter SMILES"
+        autofocus
+        v-model="todoText"
+        @keyup.enter="search"
+      />        
     </section>
 
     <section>
@@ -15,15 +19,16 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, setup, Vue } from 'vue-class-component';
 
 @Options({
-  props: {
-    msg: String
-  }
 })
 export default class HelloWorld extends Vue {
-  msg!: string
+ 
+  search() {
+    console.log('search');
+  }
+
 }
 </script>
 
