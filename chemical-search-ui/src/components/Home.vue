@@ -46,7 +46,7 @@ export default class Home extends Vue {
   search() {
     console.log('search');
     axios
-        .get("https://swapi.dev/api/people/", {
+        .get("https://api.chem-search.arqisoft.net/similarity/", {
           params: {
             search: this.keyword
           }
