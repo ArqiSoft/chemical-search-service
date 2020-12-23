@@ -12,7 +12,7 @@ services:
             - CS_ELASTICSEARCH_PASSWORD=PHmLHGCmg2G3UzM
             - CS_ELASTICSEARCH_INDEX=drug-banks
         volumes:
-            - /home/files:/home/files
+            - /home/ec2-user/files:/home/files
         build:
             context: .
 
