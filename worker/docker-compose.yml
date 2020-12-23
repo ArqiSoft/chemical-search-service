@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+    chemical-search-worker:
+        container_name: chemical-search-worker
+        image: chemical-search-worker
+        environment:
+            - CS_ELASTICSEARCH_HOST=elasticsearch
+            - CS_ELASTICSEARCH_PORT=9200
+            - CS_ELASTICSEARCH_SCHEME=http
+            - CS_ELASTICSEARCH_USER=cs-kibana
+            - CS_ELASTICSEARCH_PASSWORD=PHmLHGCmg2G3UzM
+            - CS_ELASTICSEARCH_INDEX=drug-banks
+        volumes:
+            - /home/files:/home/files
+        build:
+            context: .
+
+networks:
+    default:
+        external:
+            name: chemical-search

@@ -1,16 +1,33 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Build results
-[Dd]ebug/
-[Rr]elease/
-x64/
-[Bb]uild/
-!Source/Osdr.Mvc/OsdrWeb/Widgets/3rd/pdfjs/build
-!Source/Osdr.Ng2/src/client/assets/3rd/pdf-js/build
-!Source/Osdr.Mvc/3rd/
-[Bb]in/
-[Oo]bj/
-[Dd]ist/
-[Xx]unit/
-[Xx]unit-results.xml
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-/target/
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/

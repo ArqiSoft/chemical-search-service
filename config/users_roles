@@ -1,0 +1,4 @@
+superuser:cs-worker
+superuser:cs-api
+superuser:cs-kibana
+kibana_system:cs-kibana-system

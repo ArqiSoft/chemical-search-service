@@ -1,26 +1,61 @@
-version: '3'
+version: "3"
 
 services:
-    chemical-search-service:
-        container_name: chemical-search-service
-        image: leanda/chemical-search:latest
-        environment:
-        - TZ=EST
-        - OSDR_LOG_FOLDER=/logs
-        - OSDR_TEMP_FILES_FOLDER=/temp
-        - OSDR_RABBIT_MQ=rabbitmq://guest:guest@rabbitmq:5672/osdr_dev
-        - OSDR_MONGO_DB=mongodb://mongo:27017/osdr_dev
-        volumes:
-        - ${OSDR_TEMP_FILES_FOLDER}:/temps/
-        - ${OSDR_LOG_FOLDER}:/logs/
-        build:
-            context: .
-        ports:
-        - 8982:8081
-        networks:
-        - osdr-net-ext
-            
+  chemical-search-api:
+    container_name: chemical-search-api
+    image: chemical-search-api
+    environment:
+      - CS_ELASTICSEARCH_HOST=elasticsearch
+      - CS_ELASTICSEARCH_PORT=9200
+      - CS_ELASTICSEARCH_SCHEME=http
+      - CS_ELASTICSEARCH_USER=cs-kibana
+      - CS_ELASTICSEARCH_PASSWORD=PHmLHGCmg2G3UzM
+      - CS_ELASTICSEARCH_INDEX=drug-banks
+    build:
+      context: ./api
+    ports:
+      - 8080:8080
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - network.host=_eth0_
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - type: volume
+        source: esdata
+        target: /usr/share/elasticsearch/data
+      - ./config/elasticsearch.dev.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./config/users:/usr/share/elasticsearch/config/users
+      - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.0
+    container_name: kibana
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+    ports:
+      - 5601:5601
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+
 networks:
-    osdr-net-ext:
-        external:
-            name: osdr-sys-net
+  default:
+    name: chemical-search
+
+volumes:
+  esdata:
+  logs:

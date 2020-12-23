@@ -1,0 +1,10 @@
+# cluster.name: "docker-cluster"
+# network.host: 0.0.0.0
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE"
+http.cors.allow-headers : "Authorization, X-Requested-With,X-Auth-Token,Content-Type, Content-Length"
+xpack.security.enabled: true
+xpack.security.audit.enabled: true
+xpack.security.authc.realms.file.file1.order: 0
+xpack.security.authc.api_key.enabled: true
