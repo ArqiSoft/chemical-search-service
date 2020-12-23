@@ -5,12 +5,12 @@ services:
     container_name: chemical-search-api
     image: chemical-search-api
     environment:
-      - CS_ELASTICSEARCH_HOST=elasticsearch
-      - CS_ELASTICSEARCH_PORT=9200
-      - CS_ELASTICSEARCH_SCHEME=http
-      - CS_ELASTICSEARCH_USER=cs-kibana
-      - CS_ELASTICSEARCH_PASSWORD=PHmLHGCmg2G3UzM
-      - CS_ELASTICSEARCH_INDEX=drug-banks
+      - CS_ELASTICSEARCH_HOST=${CS_ELASTICSEARCH_HOST} #elasticsearch
+      - CS_ELASTICSEARCH_PORT=${CS_ELASTICSEARCH_PORT} #9200
+      - CS_ELASTICSEARCH_SCHEME=${CS_ELASTICSEARCH_SCHEME} #http
+      - CS_ELASTICSEARCH_USER=${CS_ELASTICSEARCH_USER} #cs-kibana
+      - CS_ELASTICSEARCH_PASSWORD=${CS_ELASTICSEARCH_PASSWORD} #PHmLHGCmg2G3UzM
+      - CS_ELASTICSEARCH_INDEX=${CS_ELASTICSEARCH_INDEX} #drug-banks
     build:
       context: ./api
     ports:
@@ -22,7 +22,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
       - network.host=_eth0_
     volumes:
       - type: volume
