@@ -13,9 +13,12 @@ import com.epam.indigo.predicate.ExactMatch;
 import com.epam.indigo.predicate.SimilarityMatch;
 import com.epam.indigo.predicate.SubstructureMatch;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 @RestController
 public class SearchController {
@@ -28,8 +31,7 @@ public class SearchController {
 
     public static void setElasticRepository() {
         ElasticRepository.ElasticRepositoryBuilder<IndigoRecord> builder = new ElasticRepository.ElasticRepositoryBuilder<>();
-        repository = builder
-                .withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
+        repository = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
                 .withPort(Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")))
                 .withScheme(System.getenv("CS_ELASTICSEARCH_SCHEME"))
                 .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"))
@@ -38,14 +40,32 @@ public class SearchController {
     }
 
     @PostMapping("/search")
-    public List<String> search(@RequestBody() final SearchRequest request) {
+    public ResponseEntity<List<String>> search(@RequestBody() final SearchRequest request) {
         if (repository == null) {
             setElasticRepository();
         }
 
+        if (request.Limit == null || request.Limit == 0) {
+            request.Limit = 100;
+        }
+
+        if (request.Threshold == 0) {
+            request.Threshold = (float) 0.9;
+        }
+
         List<String> molecules = new ArrayList<>();
         Indigo indigo = new Indigo();
-        IndigoObject indigoObject = indigo.loadMolecule(request.SmileFilter);
+
+        IndigoObject indigoObject = null;
+
+        try {
+            indigoObject = indigo.loadMolecule(request.SmileFilter);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        if (indigoObject == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
 
         IndigoRecord target = FromIndigoObject.build(indigoObject);
 
@@ -77,6 +97,6 @@ public class SearchController {
             molecules.add(mol);
         }
 
-        return molecules;
+        return ResponseEntity.ok(molecules);
     }
 }
