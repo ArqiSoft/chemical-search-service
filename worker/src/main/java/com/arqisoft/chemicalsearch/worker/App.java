@@ -63,7 +63,8 @@ public class App {
                         repository.indexRecords(records, 100);
                         records.clear();
                         i += 100;
-                        System.out.println("Indexing " + i + "records");
+                        System.out.print("                                                  \r");
+                        System.out.print("Indexing " + i + " records\r");
                     }
                 } catch (Exception ex) {
                 }
