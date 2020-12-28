@@ -15,10 +15,10 @@ import com.epam.indigo.predicate.SubstructureMatch;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 @RestController
 public class SearchController {
@@ -29,21 +29,19 @@ public class SearchController {
 
     }
 
-    public static void setElasticRepository() {
+    public static void setElasticRepository(String index) {
         ElasticRepository.ElasticRepositoryBuilder<IndigoRecord> builder = new ElasticRepository.ElasticRepositoryBuilder<>();
         repository = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
                 .withPort(Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")))
                 .withScheme(System.getenv("CS_ELASTICSEARCH_SCHEME"))
-                .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"))
+                .withIndexName(index)
                 .withUserName(System.getenv("CS_ELASTICSEARCH_USER"))
                 .withPassword(System.getenv("CS_ELASTICSEARCH_PASSWORD")).build();
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<List<String>> search(@RequestBody() final SearchRequest request) {
-        if (repository == null) {
-            setElasticRepository();
-        }
+    @PostMapping("/search/{index}")
+    public ResponseEntity<List<String>> search(@PathVariable("index") String index, @RequestBody() final SearchRequest request) {
+        setElasticRepository(index);
 
         if (request.Limit == null || request.Limit == 0) {
             request.Limit = 100;
