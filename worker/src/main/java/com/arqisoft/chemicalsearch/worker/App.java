@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class App 
-{
+public class App {
     protected static ElasticRepository<IndigoRecord> repository;
     private static String folderForFiles = "/home/files";
 
@@ -23,10 +22,11 @@ public class App
         File folder = new File(folderForFiles);
         File[] fileList = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".sdf"));
 
-        if(fileList != null && fileList.length > 0 && fileList[0].exists()){
-            indexSdf(fileList[0].getPath());
-        }
-        else{
+        if (fileList != null && fileList.length > 0 && fileList[0].exists()) {
+            for (File file : fileList) {
+                indexSdf(file.getPath());
+            }
+        } else {
             System.out.println("No files found to index");
         }
 
@@ -35,14 +35,12 @@ public class App
 
     public static void setElasticRepository() {
         ElasticRepository.ElasticRepositoryBuilder<IndigoRecord> builder = new ElasticRepository.ElasticRepositoryBuilder<>();
-        repository = builder
-                .withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
+        repository = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
                 .withPort(Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")))
                 .withScheme(System.getenv("CS_ELASTICSEARCH_SCHEME"))
                 .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"))
                 .withUserName(System.getenv("CS_ELASTICSEARCH_USER"))
-                .withPassword(System.getenv("CS_ELASTICSEARCH_PASSWORD"))
-                .build();
+                .withPassword(System.getenv("CS_ELASTICSEARCH_PASSWORD")).build();
     }
 
     public static void indexSdf(String sdfFile) {
