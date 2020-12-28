@@ -7,7 +7,11 @@ import com.epam.indigo.model.FromIndigoObject;
 import com.epam.indigo.model.IndigoRecord;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,21 +20,25 @@ public class App {
     private static String folderForFiles = "/home/files";
 
     public static void main(String[] args) {
-        System.out.println("Folder for files = " + folderForFiles);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        System.out.println(
+                dateFormat.format(Calendar.getInstance().getTime()) + " >> Folder for files = " + folderForFiles);
 
         setElasticRepository();
         File folder = new File(folderForFiles);
         File[] fileList = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".sdf"));
 
-        if (fileList != null && fileList.length > 0 && fileList[0].exists()) {
+        if (fileList != null && fileList.length > 0) {
             for (File file : fileList) {
-                indexSdf(file.getPath());
+                if (file.exists()) {
+                    indexSdf(file.getPath());
+                }
             }
         } else {
             System.out.println("No files found to index");
         }
 
-        System.out.println("Done");
+        System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Done");
     }
 
     public static void setElasticRepository() {
@@ -45,7 +53,10 @@ public class App {
 
     public static void indexSdf(String sdfFile) {
         try {
-            System.out.println("Start parsed " + sdfFile + " file");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+
+            System.out.println(
+                    dateFormat.format(Calendar.getInstance().getTime()) + " >> Start parsed " + sdfFile + " file");
 
             Indigo indigo = new Indigo();
             List<IndigoRecord> records = new ArrayList<>();
