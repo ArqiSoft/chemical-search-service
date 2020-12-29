@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  chemical-search-api:
+    container_name: chemical-search-api
+    image: chemical-search-api
+    environment:
+      - CS_ELASTICSEARCH_HOST=cs-elasticsearch
+      - CS_ELASTICSEARCH_PORT=9200
+      - CS_ELASTICSEARCH_SCHEME=http
+      - CS_ELASTICSEARCH_USER=cs-kibana
+      - CS_ELASTICSEARCH_PASSWORD=PHmLHGCmg2G3UzM
+      - CS_ELASTICSEARCH_INDEX=drug-banks
+    build:
+      context: ./api
+    ports:
+      - 8080:8080
+
+  cs-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+    container_name: cs-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - network.host=_eth0_
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - type: volume
+        source: esdata
+        target: /usr/share/elasticsearch/data
+      - ./config/elasticsearch.dev.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./config/users:/usr/share/elasticsearch/config/users
+      - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
+    ports:
+      - 9200:9200
+
+  cs-kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.0
+    container_name: cs-kibana
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_URL: http://cs-elasticsearch:9200/
+    ports:
+      - 5601:5601
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+
+networks:
+  default:
+    name: chemical-search
+
+volumes:
+  esdata:
+  logs:

@@ -15,7 +15,6 @@ import com.epam.indigo.predicate.SubstructureMatch;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,19 +28,23 @@ public class SearchController {
 
     }
 
-    public static void setElasticRepository(String index) {
+    public static void setElasticRepository() {
         ElasticRepository.ElasticRepositoryBuilder<IndigoRecord> builder = new ElasticRepository.ElasticRepositoryBuilder<>();
         repository = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
                 .withPort(Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")))
                 .withScheme(System.getenv("CS_ELASTICSEARCH_SCHEME"))
-                .withIndexName(index)
+                .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"))
                 .withUserName(System.getenv("CS_ELASTICSEARCH_USER"))
                 .withPassword(System.getenv("CS_ELASTICSEARCH_PASSWORD")).build();
     }
 
-    @PostMapping("/search/{index}")
-    public ResponseEntity<List<String>> search(@PathVariable("index") String index, @RequestBody() final SearchRequest request) {
-        setElasticRepository(index);
+    @PostMapping("/api/search")
+    public ResponseEntity<List<ResultRecord>> search(@RequestBody() final SearchRequest request) {
+        List<ResultRecord> result = new ArrayList<>();
+
+        if(repository == null){
+            setElasticRepository();
+        }
 
         if (request.Limit == null || request.Limit == 0) {
             request.Limit = 100;
@@ -51,7 +54,6 @@ public class SearchController {
             request.Threshold = (float) 0.9;
         }
 
-        List<String> molecules = new ArrayList<>();
         Indigo indigo = new Indigo();
 
         IndigoObject indigoObject = null;
@@ -90,11 +92,12 @@ public class SearchController {
         }
 
         for (IndigoRecord indigoRecord : resultRecords) {
-            IndigoObject tmpIndigoObject = indigoRecord.getIndigoObject(indigo);
-            String mol = tmpIndigoObject.molfile();
-            molecules.add(mol);
+            ResultRecord tmp = new ResultRecord();
+            tmp.Id = indigoRecord.getInternalID();
+            tmp.Score = indigoRecord.getScore();
+            result.add(tmp);
         }
 
-        return ResponseEntity.ok(molecules);
+        return ResponseEntity.ok(result);
     }
 }
