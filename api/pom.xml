@@ -39,6 +39,11 @@
 			<version>1.5.2</version>
 		</dependency>
 		<dependency>
+            <groupId>com.epam.indigo</groupId>
+            <artifactId>indigo</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+		<dependency>
 			<groupId>com.epam.indigo</groupId>
 			<artifactId>bingo-elastic</artifactId>
 			<version>1.4.1</version>
