@@ -65,14 +65,14 @@
         <tr>
           <th class="molecule"></th>
           <th>ID</th>
-          <th>Score</th>
+          <th v-if="showScore">Score</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="item in items" :key="item.Id">
           <td><img :src="item.ImageUrl" :alt="item.Id"></td>
           <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
-          <td>{{ item.Score }}</td>
+          <td v-if="showScore">{{ item.Score }}</td>
         </tr>
         </tbody>
       </table>
@@ -119,6 +119,7 @@ export default class Search extends Vue {
   items: Result[] = [];
   loading = false;
   error: string | null = null;
+  showScore = true;
 
   async search(): Promise<void> {
     const payload = {
@@ -139,6 +140,7 @@ export default class Search extends Vue {
     } catch (e) {
       this.error = `Search: ${e}`;
     } finally {
+      this.showScore = this.searchType == SearchType.Similarity;
       this.loading = false;
     }
   }
