@@ -131,6 +131,7 @@ export default class Search extends Vue {
     try {
       this.items = [];
       this.error = null;
+      this.showScore = this.searchType == SearchType.Similarity;
       this.loading = true;
       const response = await axios.post(`${this.host}/api/search`, payload);
       for (const item of response.data) {
@@ -140,7 +141,6 @@ export default class Search extends Vue {
     } catch (e) {
       this.error = `Search: ${e}`;
     } finally {
-      this.showScore = this.searchType == SearchType.Similarity;
       this.loading = false;
     }
   }
