@@ -1,33 +1,36 @@
 <template>
-  <a href="http://www.arqisoft.com/" alt="ArqiSoft, LLC" target="_blank" rel="noopener noreferrer">
-    <img alt="ArqiSoft logo" src="./assets/logo.png" class="logo">
-  </a>
-  <Home msg="Checmical Search"/>
+  <div id="app">
+    <a href="http://www.arqisoft.com/" alt="ArqiSoft, LLC" target="_blank" rel="noopener noreferrer">
+      <img alt="ArqiSoft logo" src="./assets/images/logo.png" class="logo">
+    </a>
+    <Search header="Chemical Search"/>
+  </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import Home from './components/Home.vue';
+import { Component, Vue } from 'vue-property-decorator';
+import Search from './components/Search.vue';
 
-@Options({
+@Component({
   components: {
-    Home,
+    Search,
   },
 })
 export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
+@import "./assets/styles/styles";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 
 .logo {
   width: 10rem;
+  text-align: center;
 }
 </style>

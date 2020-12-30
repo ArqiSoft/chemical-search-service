@@ -1,4 +1,11 @@
-module.exports = {
+﻿module.exports = {
+    css: {
+        loaderOptions: {
+            sass: {
+                additionalData: `@import "@/assets/styles/styles.scss";`,
+            },
+        },
+    },
     chainWebpack: config => {
         config
             .plugin('html')
@@ -7,4 +14,4 @@ module.exports = {
                 return args;
             })
     }
-}
+};
