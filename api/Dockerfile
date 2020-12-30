@@ -10,6 +10,7 @@ ENV MAVEN_APP_JAVA_OPTS -XX:NativeMemoryTracking=summary
 WORKDIR /app
 EXPOSE 8080
 RUN apt-get update && apt-get install -y curl
+RUN apt-get install -y cmake libfreetype6-dev libfontconfig1-dev
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /app/wait-for-it.sh && chmod 777 /app/wait-for-it.sh
 COPY --from=builder /usr/src/chemical-search-service/api/target/$MAVEN_APP ./
 ENTRYPOINT java $MAVEN_APP_JAVA_OPTS -jar $MAVEN_APP

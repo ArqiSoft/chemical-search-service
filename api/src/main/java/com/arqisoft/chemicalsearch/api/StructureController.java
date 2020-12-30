@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -80,7 +81,7 @@ public class StructureController {
     }
 
     @GetMapping("/api/structures/{id}/image")
-    public ResponseEntity<byte[]> renderMolById(@PathVariable("id") String id) throws IOException {
+    public ResponseEntity<byte[]> renderMolById(@PathVariable("id") String id, @RequestParam("width") int w, @RequestParam("heght") int h) throws IOException {
         RestClientBuilder builder = RestClient.builder(new HttpHost(System.getenv("CS_ELASTICSEARCH_HOST"),
                 Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")), System.getenv("CS_ELASTICSEARCH_SCHEME")));
 
@@ -107,8 +108,17 @@ public class StructureController {
         IndigoRecord resultRecord = Helpers.fromElastic(hits[0].getId(), hits[0].getSourceAsMap(), hits[0].getScore());
 
         Indigo indigo = new Indigo();
-        IndigoRenderer indigoRenderer = new IndigoRenderer(indigo);
+        indigo.setOption("ignore-stereochemistry-errors", true);
+        indigo.setOption("ignore-noncritical-query-features", true);
+
         IndigoObject tmpIndigoObject = resultRecord.getIndigoObject(indigo);
+
+        IndigoRenderer indigoRenderer = new IndigoRenderer(indigo);
+        indigo.setOption("render-stereo-style", "ext");
+		indigo.setOption("render-margins", 5, 5);
+		indigo.setOption("render-coloring", true);
+		indigo.setOption("render-relative-thickness", "1.5");
+		indigo.setOption("render-image-size", w, h);
         indigo.setOption("render-output-format", "png");
 
         return new ResponseEntity<>(indigoRenderer.renderToBuffer(tmpIndigoObject), HttpStatus.OK);
