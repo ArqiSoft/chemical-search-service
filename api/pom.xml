@@ -12,10 +12,6 @@
 	<version>0.1</version>
 	<name>chemical-search-api</name>
 
-	<!-- <properties>
-		<java.version>16</java.version>
-	</properties> -->
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,19 +44,10 @@
 			<artifactId>bingo-elastic</artifactId>
 			<version>1.4.1</version>
 		</dependency>
-
-		<!-- <dependency>
-			<groupId>com.epam.indigo</groupId>
-			<artifactId>bingo-elastic</artifactId>
-			<version>1.4.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bingo-elastic.jar</systemPath>
-		</dependency> -->
-
 		<dependency>
 			<groupId>com.epam.indigo</groupId>
 			<artifactId>indigo-renderer</artifactId>
-			<version>1.4.3</version>
+			<version>1.4.1</version>
 		</dependency>
 	</dependencies>
 
