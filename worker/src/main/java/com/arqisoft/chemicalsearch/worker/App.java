@@ -20,7 +20,7 @@ public class App {
     private static String folderForFiles = "/home/files";
 
     public static void main(String[] args) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         System.out.println(
                 dateFormat.format(Calendar.getInstance().getTime()) + " >> Folder for files = " + folderForFiles);
 
@@ -53,7 +53,7 @@ public class App {
 
     public static void indexSdf(String sdfFile) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
             System.out.println(
                     dateFormat.format(Calendar.getInstance().getTime()) + " >> Start parsed " + sdfFile + " file");

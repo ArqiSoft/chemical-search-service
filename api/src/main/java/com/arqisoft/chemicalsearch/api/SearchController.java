@@ -1,7 +1,11 @@
 package com.arqisoft.chemicalsearch.api;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.epam.indigo.Indigo;
@@ -42,6 +46,7 @@ public class SearchController {
 
     @PostMapping("/api/search")
     public ResponseEntity<List<ResultRecord>> search(@RequestBody() final SearchRequest request) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         List<ResultRecord> result = new ArrayList<>();
 
         if(repository == null){
@@ -73,6 +78,8 @@ public class SearchController {
 
         List<IndigoRecord> resultRecords = new ArrayList<>();
 
+        long time = System.nanoTime();
+
         switch (request.SearchType) {
             case SIMILARITYMATCH:
                 resultRecords = repository.stream().filter(new SimilarityMatch<>(target, request.Threshold))
@@ -92,6 +99,10 @@ public class SearchController {
             default:
                 break;
         }
+
+        time = System.nanoTime() - time;
+        System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Smile filter: " + request.SmileFilter + "; Search type: " + request.SearchType + "ж Search time: " + TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + "ms");
+
 
         for (IndigoRecord indigoRecord : resultRecords) {
             ResultRecord tmp = new ResultRecord();
