@@ -49,7 +49,7 @@ public class SearchController {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         List<ResultRecord> result = new ArrayList<>();
 
-        if(repository == null){
+        if (repository == null) {
             setElasticRepository();
         }
 
@@ -101,13 +101,34 @@ public class SearchController {
         }
 
         time = System.nanoTime() - time;
-        System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Smile filter: " + request.SmileFilter + "; Search type: " + request.SearchType + "ж Search time: " + TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + "ms");
-
+        System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Smile filter: "
+                + request.SmileFilter + "; Search type: " + request.SearchType + "ж Search time: "
+                + TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + "ms");
 
         for (IndigoRecord indigoRecord : resultRecords) {
             ResultRecord tmp = new ResultRecord();
             tmp.Id = indigoRecord.getInternalID();
             tmp.Score = indigoRecord.getScore();
+            try {
+                tmp.Name = indigoRecord.getName();
+            } catch (Exception ex) {
+            }
+            try {
+                tmp.ExternalId = indigoRecord.getField("ID").toString();
+            } catch (Exception ex) {
+            }
+            try {
+                tmp.InChIKey = indigoRecord.getField("InChIKey").toString();
+            } catch (Exception ex) {
+            }
+            try {
+                tmp.InChI = indigoRecord.getField("InChI").toString();
+            } catch (Exception ex) {
+            }
+            try {
+                tmp.MW = indigoRecord.getField("MW").toString();
+            } catch (Exception ex) {
+            }
             result.add(tmp);
         }
 
