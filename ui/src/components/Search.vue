@@ -65,7 +65,7 @@
         <tr>
           <th class="molecule"></th>
           <th>ID</th>
-          <th v-if="items.length && !items[0].ExternalId.startsWith('com.epam.indigo.model.fields.Field')">Info</th>
+          <th>Info</th>
           <th v-if="showScore">Score</th>
         </tr>
         </thead>
@@ -73,12 +73,12 @@
         <tr v-for="item in items" :key="item.Id">
           <td><img :src="item.ImageUrl" :alt="item.Id" width="200" height="200"></td>
           <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
-          <td v-if="!item.ExternalId.startsWith('com.epam.indigo.model.fields.Field')">
-            {{ item.ExternalId }} 
-            {{ item.InChI }}
-            {{ item.InChIKey }}
-            {{ item.MW }}
-            {{ item.Name ? item.Name : '' }}
+          <td>
+            <div class="py-1">{{ item.ExternalId }}</div>
+            <div class="py-1">{{ item.InChI }}</div>
+            <div class="py-1">{{ item.InChIKey }}</div>
+            <div class="py-1">{{ item.MW }}</div>
+            <div class="py-1">{{ item.Name ? item.Name : '' }}</div>
           </td>
           <td v-if="showScore">{{ item.Score }}</td>
         </tr>
@@ -187,7 +187,7 @@ export default class Search extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .molecule {
-  width: 30%;
+  width: 20%;
 }
 
 table {
