@@ -34,6 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class StructureController {
         private RestHighLevelClient elasticClient;
+        private Indigo indigo;
+        private IndigoRenderer indigoRenderer;
+
+        public StructureController() {
+                super();
+                indigo = new Indigo();
+                indigoRenderer = new IndigoRenderer(indigo);
+        }
 
         @GetMapping("/api/structures/{id}/mol")
         public ResponseEntity<String> getMolById(@PathVariable("id") String id) throws IOException {
@@ -65,7 +73,6 @@ public class StructureController {
                 IndigoRecord resultRecord = Helpers.fromElastic(hits[0].getId(), hits[0].getSourceAsMap(),
                                 hits[0].getScore());
 
-                Indigo indigo = new Indigo();
                 IndigoObject tmpIndigoObject = resultRecord.getIndigoObject(indigo);
 
                 return ResponseEntity.ok(tmpIndigoObject.molfile());
@@ -102,13 +109,11 @@ public class StructureController {
                 IndigoRecord resultRecord = Helpers.fromElastic(hits[0].getId(), hits[0].getSourceAsMap(),
                                 hits[0].getScore());
 
-                Indigo indigo = new Indigo();
                 indigo.setOption("ignore-stereochemistry-errors", true);
                 indigo.setOption("ignore-noncritical-query-features", true);
 
                 IndigoObject tmpIndigoObject = resultRecord.getIndigoObject(indigo);
 
-                IndigoRenderer indigoRenderer = new IndigoRenderer(indigo);
                 indigo.setOption("render-stereo-style", "ext");
                 indigo.setOption("render-margins", 5, 5);
                 indigo.setOption("render-coloring", true);

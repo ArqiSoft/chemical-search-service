@@ -57,7 +57,7 @@ services:
       - type: volume
         source: logs
         target: /var/log
-      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./config/kibana.dev.yml:/usr/share/kibana/config/kibana.yml
 
 networks:
   default:

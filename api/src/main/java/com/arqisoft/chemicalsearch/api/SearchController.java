@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class SearchController {
     protected static ElasticRepository<IndigoRecord> repository;
+    private Indigo indigo;
 
     public SearchController() {
         super();
-
+        indigo = new Indigo();
     }
 
     public static void setElasticRepository() {
@@ -60,8 +62,6 @@ public class SearchController {
         if (request.Threshold == 0) {
             request.Threshold = (float) 0.9;
         }
-
-        Indigo indigo = new Indigo();
 
         IndigoObject indigoObject = null;
 
@@ -102,31 +102,34 @@ public class SearchController {
 
         time = System.nanoTime() - time;
         System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Smile filter: "
-                + request.SmileFilter + "; Search type: " + request.SearchType + "ж Search time: "
+                + request.SmileFilter + "; Search type: " + request.SearchType + "; Search time: "
                 + TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + "ms");
 
         for (IndigoRecord indigoRecord : resultRecords) {
             ResultRecord tmp = new ResultRecord();
             tmp.Id = indigoRecord.getInternalID();
             tmp.Score = indigoRecord.getScore();
+
+            Map<String, Object> raw = indigoRecord.getObjects();
+
             try {
                 tmp.Name = indigoRecord.getName();
             } catch (Exception ex) {
             }
             try {
-                tmp.ExternalId = indigoRecord.getField("ID").toString();
+                tmp.ExternalId = raw.get("ID").toString();
             } catch (Exception ex) {
             }
             try {
-                tmp.InChIKey = indigoRecord.getField("InChIKey").toString();
+                tmp.InChIKey = raw.get("InChIKey").toString();
             } catch (Exception ex) {
             }
             try {
-                tmp.InChI = indigoRecord.getField("InChI").toString();
+                tmp.InChI = raw.get("InChI").toString();
             } catch (Exception ex) {
             }
             try {
-                tmp.MW = indigoRecord.getField("MW").toString();
+                tmp.MW = raw.get("MW").toString();
             } catch (Exception ex) {
             }
             result.add(tmp);
