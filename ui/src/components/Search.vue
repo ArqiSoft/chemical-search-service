@@ -65,13 +65,21 @@
         <tr>
           <th class="molecule"></th>
           <th>ID</th>
+          <th v-if="items.length && !items[0].ExternalId.startsWith('com.epam.indigo.model.fields.Field')">Info</th>
           <th v-if="showScore">Score</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="item in items" :key="item.Id">
-          <td><img :src="item.ImageUrl" :alt="item.Id"></td>
+          <td><img :src="item.ImageUrl" :alt="item.Id" width="200" height="200"></td>
           <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
+          <td v-if="!item.ExternalId.startsWith('com.epam.indigo.model.fields.Field')">
+            {{ item.ExternalId }} 
+            {{ item.InChI }}
+            {{ item.InChIKey }}
+            {{ item.MW }}
+            {{ item.Name ? item.Name : '' }}
+          </td>
           <td v-if="showScore">{{ item.Score }}</td>
         </tr>
         </tbody>
@@ -102,6 +110,11 @@ enum SearchType {
 
 interface Result {
   Id: string;
+  ExternalId: string;
+  InChI: string;
+  InChIKey: string;
+  MW: string;
+  Name: string;
   Score: number;
   ImageUrl?: string;
 }
@@ -162,10 +175,10 @@ export default class Search extends Vue {
     try {
       const response = await axios.get(`${this.host}/api/structures/${id}/image?width=${width}&height=${height}`, {responseType: 'arraybuffer'});
       const binary = new Uint8Array(response.data).reduce((data, b) => data += String.fromCharCode(b), '');
-      return `data:image/jpeg;base64,${btoa(binary)}`;
+      return `data:image/png;base64,${btoa(binary)}`;
     } catch (e) {
       this.error = `Load image: ${e}`;
-      return `https://dummyimage.com/${width}x${height}`; 
+      return `data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`; 
     }
   }
 }
@@ -174,7 +187,7 @@ export default class Search extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .molecule {
-  width: 50%;
+  width: 30%;
 }
 
 table {
