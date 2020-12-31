@@ -1,0 +1,4 @@
+xpack.security.enabled: true
+xpack.security.audit.enabled: true
+xpack.security.authc.realms.file.file1.order: 0
+xpack.security.authc.api_key.enabled: true
