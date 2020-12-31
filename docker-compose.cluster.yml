@@ -11,7 +11,7 @@ services:
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
-      - http.port=9200
+      - http.port=9201
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
@@ -34,7 +34,7 @@ services:
       # - ./config/users:/usr/share/elasticsearch/config/users
       # - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
     ports:
-      - 9200:9200
+      - 9201:9201
 
   cs-elasticsearch-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
@@ -61,7 +61,7 @@ services:
         source: esdata02
         target: /usr/share/elasticsearch/data
     ports:
-      - 9201:9201
+      - 9202:9202
 
   cs-elasticsearch-03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
@@ -88,14 +88,14 @@ services:
         source: esdata03
         target: /usr/share/elasticsearch/data
     ports:
-      - 9202:9202
+      - 9203:9203
 
   cs-kibana-new:
     image: docker.elastic.co/kibana/kibana:7.9.0
     container_name: cs-kibana-new
     environment:
       SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://cs-elasticsearch-01:9200/
+      ELASTICSEARCH_URL: http://cs-elasticsearch-01:9201/
     ports:
       - 5601:5601
     volumes:
