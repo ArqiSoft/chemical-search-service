@@ -1,6 +1,30 @@
 version: "3"
 
 services:
+  chemical-search-ui:
+    container_name: chemical-search-ui
+    image: chemical-search-ui
+    build:
+      context: ./ui
+    ports:
+      - 80:80
+
+  chemical-search-api:
+    container_name: chemical-search-api
+    image: chemical-search-api
+    environment:
+      - CS_ELASTICSEARCH_HOST=${CS_ELASTICSEARCH_HOST} #elasticsearch
+      - CS_ELASTICSEARCH_PORT=${CS_ELASTICSEARCH_PORT} #9200
+      - CS_ELASTICSEARCH_SCHEME=${CS_ELASTICSEARCH_SCHEME} #http
+      - CS_ELASTICSEARCH_USER=${CS_ELASTICSEARCH_USER} #cs-kibana
+      - CS_ELASTICSEARCH_PASSWORD=${CS_ELASTICSEARCH_PASSWORD} #PHmLHGCmg2G3UzM
+      - CS_ELASTICSEARCH_INDEX=${CS_ELASTICSEARCH_INDEX} #drug-banks
+    build:
+      context: ./api
+    ports:
+      - 8080:8080
+
+  
   cs-elasticsearch-01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
     container_name: cs-elasticsearch-01
@@ -90,7 +114,7 @@ services:
     ports:
       - 9203:9203
 
-  cs-kibana-new:
+  cs-kibana:
     image: docker.elastic.co/kibana/kibana:7.9.0
     container_name: cs-kibana-new
     environment:

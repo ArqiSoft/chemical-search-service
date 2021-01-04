@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,12 +42,22 @@ public class App {
 
     public static void setElasticRepository() {
         ElasticRepository.ElasticRepositoryBuilder<IndigoRecord> builder = new ElasticRepository.ElasticRepositoryBuilder<>();
-        repository = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
+
+        builder = builder.withHostName(System.getenv("CS_ELASTICSEARCH_HOST"))
                 .withPort(Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")))
                 .withScheme(System.getenv("CS_ELASTICSEARCH_SCHEME"))
-                .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"))
-                .withUserName(System.getenv("CS_ELASTICSEARCH_USER"))
-                .withPassword(System.getenv("CS_ELASTICSEARCH_PASSWORD")).build();
+                .withIndexName(System.getenv("CS_ELASTICSEARCH_INDEX"));
+
+        String user = System.getenv("CS_ELASTICSEARCH_USER");
+        String password = System.getenv("CS_ELASTICSEARCH_PASSWORD");
+        if (user != null && user.length() > 0) {
+            builder = builder.withUserName(user);
+        }
+        if (password != null && password.length() > 0) {
+            builder = builder.withPassword(password);
+        }
+
+        repository = builder.build();
     }
 
     public static void indexSdf(String sdfFile) {
