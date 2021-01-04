@@ -49,12 +49,17 @@ public class StructureController {
                                 Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")),
                                 System.getenv("CS_ELASTICSEARCH_SCHEME")));
 
-                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(
-                                System.getenv("CS_ELASTICSEARCH_USER"), System.getenv("CS_ELASTICSEARCH_PASSWORD")));
-                builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.disableAuthCaching()
-                                .setSSLHostnameVerifier((s, sslSession) -> false)
-                                .setDefaultCredentialsProvider(credentialsProvider));
+                String user = System.getenv("CS_ELASTICSEARCH_USER");
+                String password = System.getenv("CS_ELASTICSEARCH_PASSWORD");
+                if (user != null && user.length() > 0 && password != null && password.length() > 0) {
+                        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(AuthScope.ANY,
+                                        new UsernamePasswordCredentials(user, password));
+                        builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.disableAuthCaching()
+                                        .setSSLHostnameVerifier((s, sslSession) -> false)
+                                        .setDefaultCredentialsProvider(credentialsProvider));
+                }
+
                 elasticClient = new RestHighLevelClient(builder);
 
                 org.elasticsearch.action.search.SearchRequest searchRequest = new org.elasticsearch.action.search.SearchRequest(
@@ -85,12 +90,17 @@ public class StructureController {
                                 Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")),
                                 System.getenv("CS_ELASTICSEARCH_SCHEME")));
 
-                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(
-                                System.getenv("CS_ELASTICSEARCH_USER"), System.getenv("CS_ELASTICSEARCH_PASSWORD")));
-                builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.disableAuthCaching()
-                                .setSSLHostnameVerifier((s, sslSession) -> false)
-                                .setDefaultCredentialsProvider(credentialsProvider));
+                String user = System.getenv("CS_ELASTICSEARCH_USER");
+                String password = System.getenv("CS_ELASTICSEARCH_PASSWORD");
+                if (user != null && user.length() > 0 && password != null && password.length() > 0) {
+                        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(AuthScope.ANY,
+                                        new UsernamePasswordCredentials(user, password));
+                        builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.disableAuthCaching()
+                                        .setSSLHostnameVerifier((s, sslSession) -> false)
+                                        .setDefaultCredentialsProvider(credentialsProvider));
+                }
+
                 elasticClient = new RestHighLevelClient(builder);
 
                 org.elasticsearch.action.search.SearchRequest searchRequest = new org.elasticsearch.action.search.SearchRequest(
