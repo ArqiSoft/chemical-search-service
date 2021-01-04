@@ -91,7 +91,7 @@ public class App {
             if (!records.isEmpty()) {
                 i += records.size();
                 repository.indexRecords(records, 100);
-                System.out.println("Indexing " + i + "records");
+                System.out.println("Indexing " + i + " records");
             }
         } catch (Exception e) {
             e.printStackTrace();
