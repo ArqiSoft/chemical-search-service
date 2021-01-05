@@ -114,7 +114,7 @@ services:
     ports:
       - 9203:9203
 
-  cs-kibana:
+  cs-kibana-new:
     image: docker.elastic.co/kibana/kibana:7.9.0
     container_name: cs-kibana-new
     environment:
