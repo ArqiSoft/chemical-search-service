@@ -151,7 +151,7 @@ export default class Search extends Vue {
   showScore = true;
   requestStartedAt = 0;
   exectutionTime = '';
-  info = ' ';
+  info: string | null = ' ';
 
   async search(): Promise<void> {
     this.requestStartedAt = new Date().getTime();
