@@ -27,14 +27,14 @@
       </div>
     </div>
 
-    <div class="columns">
+    <!-- <div class="columns">
       <div class="col-mx-auto form-group">
         <label class="form-checkbox">
           <input type="checkbox" v-model="generateImages">
           <i class="form-icon"></i> Generate images
         </label>
       </div>
-    </div>
+    </div> -->
 
     <div class="columns" v-show="searchType === SearchType.Similarity">
       <div class="column col-6 col-mx-auto form-horizontal">
@@ -50,6 +50,9 @@
       </div>
     </div>
 
+    <div class="columns">
+      <div class="column col-10 col-mx-auto info">{{ info }}</div>
+    </div>
     <div class="columns">
       <div class="column col-10 col-mx-auto form-horizontal">
         <div class="form-group">
@@ -148,6 +151,7 @@ export default class Search extends Vue {
   showScore = true;
   requestStartedAt = 0;
   exectutionTime = '';
+  info = ' ';
 
   async search(): Promise<void> {
     this.requestStartedAt = new Date().getTime();
@@ -159,17 +163,22 @@ export default class Search extends Vue {
     };
     try {
       this.items = [];
-      this.error = null;
+      this.info = this.error = null;
       this.showScore = this.searchType == SearchType.Similarity;
       this.loading = true;
-      // const response = await axios.post(`${this.host}/api/search`, payload).then(
-      //   this.exectutionTime = `${new Date().getTime() - this.requestStartedAt} ms`;
-      // );
       const response = await axios.post(`${this.host}/api/search`, payload);
-      this.items = response.data;
+      this.exectutionTime = `${new Date().getTime() - this.requestStartedAt} ms`;
+      this.items = response.data ?? [];
+      this.info = `${this.items.length} results (${this.exectutionTime})`;
+
+      let index = 0;
       if (this.generateImages) {
         for (const item of response.data) {
           item.ImageUrl = await this.loadImage(item.Id);
+          if(index % 5 === 0) {
+            this.items = {...this.items};
+          }
+          index++;
         }
       }
       this.items = {...this.items};
@@ -231,6 +240,10 @@ table thead th {
   top: 20px;
   right: 20px;
   max-width: 400px;
+  text-align: left;
+}
+.info {
+  height: 1rem;
   text-align: left;
 }
 </style>
