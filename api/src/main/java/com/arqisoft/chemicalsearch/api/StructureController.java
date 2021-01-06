@@ -1,6 +1,10 @@
 package com.arqisoft.chemicalsearch.api;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import com.epam.indigo.Indigo;
 import com.epam.indigo.IndigoObject;
@@ -36,6 +40,7 @@ public class StructureController {
         private RestHighLevelClient elasticClient;
         private Indigo indigo;
         private IndigoRenderer indigoRenderer;
+        private DateFormat dateFormat;
 
         public StructureController() {
                 super();
@@ -58,6 +63,7 @@ public class StructureController {
                 }
 
                 elasticClient = new RestHighLevelClient(builder);
+                dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         }
 
         @GetMapping("/api/structures/{id}/mol")
@@ -69,8 +75,12 @@ public class StructureController {
                 searchSourceBuilder.query(QueryBuilders.termQuery("_id", id));
                 searchRequest.source(searchSourceBuilder);
 
+                long time = System.nanoTime();
+
                 SearchResponse searchResponse = elasticClient.search(searchRequest, RequestOptions.DEFAULT);
                 SearchHit[] hits = searchResponse.getHits().getHits();
+
+                time = System.nanoTime() - time;
 
                 hits = searchResponse.getHits().getHits();
                 if (hits == null || hits.length == 0) {
@@ -81,18 +91,23 @@ public class StructureController {
 
                 IndigoObject tmpIndigoObject = resultRecord.getIndigoObject(indigo);
 
+                System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Get molecule info by id "
+                                + id + " " + TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + " ms");
+
                 return ResponseEntity.ok(tmpIndigoObject.molfile());
         }
 
         @GetMapping(path = "/api/structures/{id}/image", produces = MediaType.IMAGE_PNG_VALUE)
         public ResponseEntity<byte[]> renderMolById(@PathVariable("id") String id, @RequestParam("width") int w,
                         @RequestParam("height") int h) throws IOException {
-                
+
                 org.elasticsearch.action.search.SearchRequest searchRequest = new org.elasticsearch.action.search.SearchRequest(
                                 System.getenv("CS_ELASTICSEARCH_INDEX"));
                 SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
                 searchSourceBuilder.query(QueryBuilders.termQuery("_id", id));
                 searchRequest.source(searchSourceBuilder);
+
+                long time = System.nanoTime();
 
                 SearchResponse searchResponse = elasticClient.search(searchRequest, RequestOptions.DEFAULT);
                 SearchHit[] hits = searchResponse.getHits().getHits();
@@ -103,6 +118,10 @@ public class StructureController {
                 }
                 IndigoRecord resultRecord = Helpers.fromElastic(hits[0].getId(), hits[0].getSourceAsMap(),
                                 hits[0].getScore());
+
+                long searchTime = System.nanoTime() - time;
+
+                time = System.nanoTime();
 
                 indigo.setOption("ignore-stereochemistry-errors", true);
                 indigo.setOption("ignore-noncritical-query-features", true);
@@ -116,6 +135,11 @@ public class StructureController {
                 indigo.setOption("render-image-size", w, h);
                 indigo.setOption("render-output-format", "png");
 
-                return new ResponseEntity<>(indigoRenderer.renderToBuffer(tmpIndigoObject), HttpStatus.OK);
+                byte[] image = indigoRenderer.renderToBuffer(tmpIndigoObject);
+
+                System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Render image by id "
+                                + id + " Search time: " + TimeUnit.MILLISECONDS.convert(searchTime, TimeUnit.NANOSECONDS) + " ms; Render time: "+ TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + " ms");
+
+                return new ResponseEntity<>(image, HttpStatus.OK);
         }
 }
