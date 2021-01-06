@@ -76,7 +76,6 @@
         <thead>
         <tr>
           <th class="molecule"></th>
-          <th>ID</th>
           <th>Info</th>
           <th v-if="showScore">Score</th>
         </tr>
@@ -87,13 +86,14 @@
             <img v-if="item.ImageUrl" :src="item.ImageUrl" :alt="item.Id" width="200" height="200">
             <span v-if="!item.ImageUrl && !generateImages">No structure image</span>
           </td>
-          <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
           <td>
-            <div class="py-1">{{ item.ExternalId }}</div>
-            <div class="py-1">{{ item.InChI }}</div>
-            <div class="py-1">{{ item.InChIKey }}</div>
-            <div class="py-1">{{ item.MW }}</div>
-            <div class="py-1">{{ item.Name ? item.Name : '' }}</div>
+            <div class="py-1"><b>ExternalId:</b> {{ item.ExternalId }}</div>
+            <div class="py-1"><b>InChI:</b> {{ item.InChI }}</div>
+            <div class="py-1"><b>InChIKey:</b> {{ item.InChIKey }}</div>
+            <div class="py-1"><b>MW:</b> {{ item.MW }}</div>
+            <div class="py-1" v-if="item.Name"><b>Name:</b> {{ item.Name ? item.Name : '' }}</div>
+            <div class="py-1"><b>MOL file:</b> <a class="c-hand" @click="download(item.Id)">download</a></div>
+
           </td>
           <td v-if="showScore">{{ item.Score }}</td>
         </tr>
@@ -194,7 +194,7 @@ export default class Search extends Vue {
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${id}.txt`);
+    link.setAttribute('download', `${id}.mol`);
     document.body.appendChild(link);
     link.click();
   }
