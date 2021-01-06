@@ -13,16 +13,25 @@
     <div class="columns">
       <div class="col-6 col-mx-auto form-group">
         <label class="form-radio form-inline mx-2">
-          <input type="radio" name="gender" v-bind:value="SearchType.Similarity" v-model="searchType"><i
+          <input type="radio" name="searchtype" v-bind:value="SearchType.Similarity" v-model="searchType"><i
             class="form-icon"></i> Similarity
         </label>
         <label class="form-radio form-inline mx-2">
-          <input type="radio" name="gender" v-bind:value="SearchType.Exact" v-model="searchType"><i
+          <input type="radio" name="searchtype" v-bind:value="SearchType.Exact" v-model="searchType"><i
             class="form-icon"></i> Exact
         </label>
         <label class="form-radio form-inline mx-2">
-          <input type="radio" name="gender" v-bind:value="SearchType.Substructure" v-model="searchType"><i
+          <input type="radio" name="searchtype" v-bind:value="SearchType.Substructure" v-model="searchType"><i
             class="form-icon"></i> Substructure
+        </label>
+      </div>
+    </div>
+  
+    <div class="columns">
+      <div class="col-mx-auto form-group">
+        <label class="form-checkbox">
+          <input type="checkbox" v-model="generateImages">
+          <i class="form-icon"></i> Generate images
         </label>
       </div>
     </div>
@@ -71,7 +80,10 @@
         </thead>
         <tbody>
         <tr v-for="item in items" :key="item.Id">
-          <td><img :src="item.ImageUrl" :alt="item.Id" width="200" height="200"></td>
+          <td>
+            <img v-if="item.ImageUrl" :src="item.ImageUrl" :alt="item.Id" width="200" height="200">
+            <span v-if="!item.ImageUrl">No structure image</span>
+          </td>
           <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
           <td>
             <div class="py-1">{{ item.ExternalId }}</div>
@@ -127,14 +139,18 @@ export default class Search extends Vue {
   filter = '';
   searchType: SearchType = SearchType.Similarity;
   SearchType = SearchType;
+  generateImages = true;
   threshold = 0.9;
   limit = 10;
   items: Result[] = [];
   loading = false;
   error: string | null = null;
   showScore = true;
+  requestStartedAt = 0;
+  exectutionTime = '';
 
   async search(): Promise<void> {
+    this.requestStartedAt = new Date().getTime();
     const payload = {
       SmileFilter: this.filter,
       SearchType: this.searchType,
@@ -146,9 +162,14 @@ export default class Search extends Vue {
       this.error = null;
       this.showScore = this.searchType == SearchType.Similarity;
       this.loading = true;
+      // const response = await axios.post(`${this.host}/api/search`, payload).then(
+      //   this.exectutionTime = `${new Date().getTime() - this.requestStartedAt} ms`;
+      // );
       const response = await axios.post(`${this.host}/api/search`, payload);
-      for (const item of response.data) {
-        item.ImageUrl = await this.loadImage(item.Id);
+      if (this.generateImages) {
+        for (const item of response.data) {
+          item.ImageUrl = await this.loadImage(item.Id);
+        }
       }
       this.items = response.data;
     } catch (e) {
@@ -160,7 +181,6 @@ export default class Search extends Vue {
 
   async download(id: string): Promise<void> {
     const response = await axios.get(`${this.host}/api/structures/${id}/mol`, {responseType: 'blob'});
-    
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
