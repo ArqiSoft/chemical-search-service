@@ -26,7 +26,7 @@
         </label>
       </div>
     </div>
-  
+
     <div class="columns">
       <div class="col-mx-auto form-group">
         <label class="form-checkbox">
@@ -82,7 +82,7 @@
         <tr v-for="item in items" :key="item.Id">
           <td>
             <img v-if="item.ImageUrl" :src="item.ImageUrl" :alt="item.Id" width="200" height="200">
-            <span v-if="!item.ImageUrl">No structure image</span>
+            <span v-if="!item.ImageUrl && !generateImages">No structure image</span>
           </td>
           <td><a class="c-hand" @click="download(item.Id)">{{ item.Id }}</a></td>
           <td>
@@ -166,12 +166,13 @@ export default class Search extends Vue {
       //   this.exectutionTime = `${new Date().getTime() - this.requestStartedAt} ms`;
       // );
       const response = await axios.post(`${this.host}/api/search`, payload);
+      this.items = response.data;
       if (this.generateImages) {
         for (const item of response.data) {
           item.ImageUrl = await this.loadImage(item.Id);
         }
       }
-      this.items = response.data;
+      this.items = {...this.items};
     } catch (e) {
       this.error = `Search: ${e}`;
     } finally {
@@ -188,7 +189,7 @@ export default class Search extends Vue {
     document.body.appendChild(link);
     link.click();
   }
-  
+
   private async loadImage(id: string): Promise<string> {
     const width = 200;
     const height = 200;
@@ -198,7 +199,7 @@ export default class Search extends Vue {
       return `data:image/png;base64,${btoa(binary)}`;
     } catch (e) {
       this.error = `Load image: ${e}`;
-      return `data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`; 
+      return `data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`;
     }
   }
 }
