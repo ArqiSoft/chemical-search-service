@@ -137,6 +137,8 @@ public class StructureController {
 
                 byte[] image = indigoRenderer.renderToBuffer(tmpIndigoObject);
 
+                time = System.nanoTime() - time;
+
                 System.out.println(dateFormat.format(Calendar.getInstance().getTime()) + " >> Render image by id "
                                 + id + " Search time: " + TimeUnit.MILLISECONDS.convert(searchTime, TimeUnit.NANOSECONDS) + " ms; Render time: "+ TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS) + " ms");
 
