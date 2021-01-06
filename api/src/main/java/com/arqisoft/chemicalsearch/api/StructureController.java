@@ -41,10 +41,7 @@ public class StructureController {
                 super();
                 indigo = new Indigo();
                 indigoRenderer = new IndigoRenderer(indigo);
-        }
 
-        @GetMapping("/api/structures/{id}/mol")
-        public ResponseEntity<String> getMolById(@PathVariable("id") String id) throws IOException {
                 RestClientBuilder builder = RestClient.builder(new HttpHost(System.getenv("CS_ELASTICSEARCH_HOST"),
                                 Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")),
                                 System.getenv("CS_ELASTICSEARCH_SCHEME")));
@@ -61,6 +58,10 @@ public class StructureController {
                 }
 
                 elasticClient = new RestHighLevelClient(builder);
+        }
+
+        @GetMapping("/api/structures/{id}/mol")
+        public ResponseEntity<String> getMolById(@PathVariable("id") String id) throws IOException {
 
                 org.elasticsearch.action.search.SearchRequest searchRequest = new org.elasticsearch.action.search.SearchRequest(
                                 System.getenv("CS_ELASTICSEARCH_INDEX"));
@@ -86,23 +87,7 @@ public class StructureController {
         @GetMapping(path = "/api/structures/{id}/image", produces = MediaType.IMAGE_PNG_VALUE)
         public ResponseEntity<byte[]> renderMolById(@PathVariable("id") String id, @RequestParam("width") int w,
                         @RequestParam("height") int h) throws IOException {
-                RestClientBuilder builder = RestClient.builder(new HttpHost(System.getenv("CS_ELASTICSEARCH_HOST"),
-                                Integer.parseInt(System.getenv("CS_ELASTICSEARCH_PORT")),
-                                System.getenv("CS_ELASTICSEARCH_SCHEME")));
-
-                String user = System.getenv("CS_ELASTICSEARCH_USER");
-                String password = System.getenv("CS_ELASTICSEARCH_PASSWORD");
-                if (user != null && user.length() > 0 && password != null && password.length() > 0) {
-                        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                        credentialsProvider.setCredentials(AuthScope.ANY,
-                                        new UsernamePasswordCredentials(user, password));
-                        builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.disableAuthCaching()
-                                        .setSSLHostnameVerifier((s, sslSession) -> false)
-                                        .setDefaultCredentialsProvider(credentialsProvider));
-                }
-
-                elasticClient = new RestHighLevelClient(builder);
-
+                
                 org.elasticsearch.action.search.SearchRequest searchRequest = new org.elasticsearch.action.search.SearchRequest(
                                 System.getenv("CS_ELASTICSEARCH_INDEX"));
                 SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
