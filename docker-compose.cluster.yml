@@ -34,8 +34,8 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-02,cs-elasticsearch-03
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
-      - http.port=9201
+      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - http.port=9200
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
@@ -44,9 +44,9 @@ services:
       memlock:
         soft: -1
         hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+      # nofile:
+      #   soft: 65536
+      #   hard: 65536
     volumes:
       - type: volume
         source: ./es-logs-01
@@ -58,7 +58,7 @@ services:
       # - ./config/users:/usr/share/elasticsearch/config/users
       # - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
     ports:
-      - 9201:9201
+      - 9200:9200
 
   cs-elasticsearch-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
@@ -69,14 +69,14 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-01,cs-elasticsearch-03
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
+      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+      # nofile:
+      #   soft: 65536
+      #   hard: 65536
     volumes:
       - type: volume
         source: ./es-logs-02
@@ -84,8 +84,8 @@ services:
       - type: volume
         source: esdata02
         target: /usr/share/elasticsearch/data
-    ports:
-      - 9202:9202
+    # ports:
+    #   - 9202:9202
 
   cs-elasticsearch-03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
@@ -96,14 +96,14 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-01,cs-elasticsearch-02
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
+      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+      # nofile:
+      #   soft: 65536
+      #   hard: 65536
     volumes:
       - type: volume
         source: ./es-logs-03
@@ -111,15 +111,15 @@ services:
       - type: volume
         source: esdata03
         target: /usr/share/elasticsearch/data
-    ports:
-      - 9203:9203
+    # ports:
+    #   - 9203:9203
 
-  cs-kibana-new:
+  cs-kibana:
     image: docker.elastic.co/kibana/kibana:7.9.0
-    container_name: cs-kibana-new
+    container_name: cs-kibana
     environment:
       SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://cs-elasticsearch-01:9201/
+      ELASTICSEARCH_URL: http://cs-elasticsearch-01:9200/
     ports:
       - 5601:5601
     volumes:
