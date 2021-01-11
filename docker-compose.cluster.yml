@@ -34,7 +34,7 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-02,cs-elasticsearch-03
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
       - http.port=9200
       - http.cors.enabled=true
       - http.cors.allow-origin=*
@@ -69,7 +69,7 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-01,cs-elasticsearch-03
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
     ulimits:
       memlock:
         soft: -1
@@ -96,7 +96,7 @@ services:
       - discovery.seed_hosts=cs-elasticsearch-01,cs-elasticsearch-02
       - cluster.initial_master_nodes=cs-elasticsearch-01,cs-elasticsearch-02,cs-elasticsearch-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
     ulimits:
       memlock:
         soft: -1
