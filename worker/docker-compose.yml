@@ -10,7 +10,7 @@ services:
             - CS_ELASTICSEARCH_SCHEME=${CS_ELASTICSEARCH_SCHEME} #http
             - CS_ELASTICSEARCH_USER=${CS_ELASTICSEARCH_USER} #cs-kibana
             - CS_ELASTICSEARCH_PASSWORD=${CS_ELASTICSEARCH_PASSWORD} #PHmLHGCmg2G3UzM
-            - CS_ELASTICSEARCH_INDEX=${CS_ELASTICSEARCH_INDEX} #drug-banks
+            - CS_ELASTICSEARCH_INDEX=${CS_ELASTICSEARCH_INDEX} #sure-chembl
         volumes:
             - /home/ec2-user/files:/home/files
         build:
