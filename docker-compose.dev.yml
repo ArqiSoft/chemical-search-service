@@ -3,6 +3,8 @@ version: "3"
 services:
   chemical-search-ui:
     container_name: chemical-search-ui
+    environment:
+      - CS_API_HOST=${CS_API_HOST}
     image: chemical-search-ui
     build:
       context: ./ui
