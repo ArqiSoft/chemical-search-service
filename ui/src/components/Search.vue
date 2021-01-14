@@ -138,7 +138,7 @@ interface Result {
 export default class Search extends Vue {
   @Prop() private header!: string;
 
-  host = 'http://34.204.178.255:8080';
+  host = process.env.VUE_APP_CS_API_HOST;
   filter = '';
   searchType: SearchType = SearchType.Similarity;
   SearchType = SearchType;
