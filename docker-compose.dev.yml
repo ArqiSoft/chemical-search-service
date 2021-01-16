@@ -32,7 +32,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2048M -Xmx2048M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
       - network.host=_eth0_
     volumes:
       - type: volume
