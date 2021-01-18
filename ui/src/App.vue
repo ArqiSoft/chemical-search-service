@@ -6,7 +6,7 @@
         <a alt="About" href="#" class="btn btn-link" @click="isActive = true"
           >About</a
         >
-        <a
+        <!-- <a
           alt="GitHub Repo"
           class="btn btn-link"
           href="https://github.com/ArqiSoft/chemical-search-service"
@@ -19,7 +19,7 @@
             width="24"
             title="GitHub Repo"
           />
-        </a>
+        </a> -->
       </section>
     </header>
     <a
@@ -75,7 +75,7 @@
               instance with ElasticSearch 7 running in Docker but some other
               configurations may be applied later.
             </p>
-            <p>
+            <!-- <p>
               <a
                 alt="GitHub Repo"
                 href="https://github.com/ArqiSoft/chemical-search-service"
@@ -83,7 +83,7 @@
                 rel="noopener noreferrer"
                 >Source code</a
               >
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
