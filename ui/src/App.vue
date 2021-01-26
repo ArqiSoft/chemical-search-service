@@ -61,14 +61,13 @@
             <p>
               Publicly available
               <a
-                alt="SureChEMBL dataset"
-                href="ftp://ftp.ebi.ac.uk/pub/databases/chembl/SureChEMBL/data/"
+                alt="ChEMBL dataset"
+                href="ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest"
                 target="_blank"
                 rel="noopener noreferrer"
-                >SureChEMBL dataset</a
+                >ChEMBL dataset</a
               >
-              is preloaded into ElasticSearch and current index contains more
-              than 20 millions compounds.
+              is preloaded into ElasticSearch and current index contains 2 millions compounds.
             </p>
             <p>
               The application hosted in AWS environment on a separate EC2
